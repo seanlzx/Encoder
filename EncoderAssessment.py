@@ -34,12 +34,6 @@ class Encoder:
                 new_index = self._reference_table.index(c.upper()) - shift
                 if new_index < 0:
                     new_index += reference_table_length
-                # # taking advantage of the fact the non alphabetical characters return false for isupper or islower
-                # # could have been done with ternary operator, but would make it more unreadeable than it already is
-                # if not c.islower():
-                #     encodedText += str(self._reference_table[new_index])
-                # else:
-                #     encodedText += str(self._reference_table[new_index]).lower()
                     
                 encodedText += str(self._reference_table[new_index])
             else:
@@ -50,20 +44,15 @@ class Encoder:
 
     def decode(self, encodedText):
         shift = self._reference_table.index(encodedText[0])
+        reference_table_length = len(self._reference_table)
 
         plainText = ""
 
         for c in encodedText[1:]:
             if c.upper() in self._reference_table:
                 new_index = self._reference_table.index(c.upper()) + shift
-                if new_index > 43:
-                    new_index -= 44
-                # # taking advantage of the fact the non alphabetical characters return false for isupper or islower
-                # # could have been done with ternary operator, but would make it more unreadeable than it already is
-                # if not c.islower():
-                #     plainText += str(self._reference_table[new_index])
-                # else:
-                #     plainText += str(self._reference_table[new_index]).lower()
+                if new_index >= reference_table_length:
+                    new_index -= reference_table_length
                 plainText += str(self._reference_table[new_index])
             else:
                 plainText += c
