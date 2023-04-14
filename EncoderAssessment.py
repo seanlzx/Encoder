@@ -5,6 +5,7 @@ class Encoder:
     def __init__(self, offset, reference_table):
         self._offset = offset
         self._reference_table = reference_table
+        self.reference_table_length = reference_table
         
     @property
     def offset(self):
@@ -25,7 +26,7 @@ class Encoder:
 
     def encode(self, plainText):
         shift = self._reference_table.index(self._offset.upper())
-        reference_table_length = len(self._reference_table)
+        
 
         encodedText = self._offset
 
@@ -33,7 +34,7 @@ class Encoder:
             if c.upper() in self._reference_table:
                 new_index = self._reference_table.index(c.upper()) - shift
                 if new_index < 0:
-                    new_index += reference_table_length
+                    new_index += self.reference_table_length
                     
                 encodedText += str(self._reference_table[new_index])
             else:
@@ -44,15 +45,14 @@ class Encoder:
 
     def decode(self, encodedText):
         shift = self._reference_table.index(encodedText[0])
-        reference_table_length = len(self._reference_table)
 
         plainText = ""
 
         for c in encodedText[1:]:
             if c.upper() in self._reference_table:
                 new_index = self._reference_table.index(c.upper()) + shift
-                if new_index >= reference_table_length:
-                    new_index -= reference_table_length
+                if new_index >= self.reference_table_length:
+                    new_index -= self.reference_table_length
                 plainText += str(self._reference_table[new_index])
             else:
                 plainText += c
